@@ -1,0 +1,129 @@
+// package auth
+
+import (
+	"crypto/rand"
+	"crypto/rsa"
+	"fmt"
+	"testing"
+
+	"github.com/lestrrat-go/jwx/jwa"
+	"github.com/lestrrat-go/jwx/jwk"
+	// "github.com/lestrrat-go/jwx/jwt"
+)
+
+// https://cognito-idp.{region}.amazonaws.com/{userPoolId}/.well-known/jwks.json
+// https://cognito-idp.ca-central-1.amazonaws.com/ca-central-1_lolwfYIAr/.well-known/jwks.json
+
+/* const (
+	cognitoClientID = "5n63nd473pv7ne2qskv30gkcbh" // gdips client id
+	username        = "pulpfree"                   // expected username associated with token
+	expiredToken    = "eyJraWQiOiI3SUh0cXdKRThJVHg3MXJEdkJCRkgrUTByNm5DZXd5ZERqVWpUZ0ZjNFhFPSIsImFsZyI6IlJTMjU2In0.eyJzdWIiOiIyYThkYWE0ZC1hMGNhLTQ0MWUtYjA3OS03YmE5MjNkZmZjYzkiLCJkZXZpY2Vfa2V5IjoiY2EtY2VudHJhbC0xX2IwY2JlODg1LWJkYmMtNDBmZi05OTA0LTg4ZDVkYTU1NDNiYiIsInRva2VuX3VzZSI6ImFjY2VzcyIsInNjb3BlIjoiYXdzLmNvZ25pdG8uc2lnbmluLnVzZXIuYWRtaW4iLCJhdXRoX3RpbWUiOjE1OTgzMDA2MzAsImlzcyI6Imh0dHBzOlwvXC9jb2duaXRvLWlkcC5jYS1jZW50cmFsLTEuYW1hem9uYXdzLmNvbVwvY2EtY2VudHJhbC0xX2xvbHdmWUlBciIsImV4cCI6MTU5ODM3MjM5NiwiaWF0IjoxNTk4MzY4Nzk2LCJqdGkiOiJmY2Y2YjYyYi03YmIyLTQ2NTctODcwYS01MzQyYjk2NDhmNDQiLCJjbGllbnRfaWQiOiI1bjYzbmQ0NzNwdjduZTJxc2t2MzBna2NiaCIsInVzZXJuYW1lIjoicHVscGZyZWUifQ.GmWIbRx3NJs-S-3XzTYG8rrnsbPm1z8QWQr1qy3tRRrsQMAvB7a0NJu9amnDKK71iDjnn6CcsNF0qgSVxmJFsqJmKAWFLmqifRqk0T3ChvIMmQThuyDI9G0ML7kfU8VR7m1S0kqyd0nmuaCIbH0skhRyzvrjUWJFmf3Es5prA0FLamr_Kv8lyAccH0Ks5WD-NHaw7vtHf7QuH1WJEUXcfVHMVlA6x_PdTh8QUqBsYN04aSZDumpGUHcDVQ5-ABZcuYZ6_WquwfYY2Tk76Sy9dpb-Cu3th6xNcA9pGZ240WrIYGeoRBct42wMRAJrcsdNd1aA4K8qRC1dnfo8UFm2Ww"
+	validToken      = "eyJraWQiOiI3SUh0cXdKRThJVHg3MXJEdkJCRkgrUTByNm5DZXd5ZERqVWpUZ0ZjNFhFPSIsImFsZyI6IlJTMjU2In0.eyJzdWIiOiIyYThkYWE0ZC1hMGNhLTQ0MWUtYjA3OS03YmE5MjNkZmZjYzkiLCJkZXZpY2Vfa2V5IjoiY2EtY2VudHJhbC0xX2IwY2JlODg1LWJkYmMtNDBmZi05OTA0LTg4ZDVkYTU1NDNiYiIsInRva2VuX3VzZSI6ImFjY2VzcyIsInNjb3BlIjoiYXdzLmNvZ25pdG8uc2lnbmluLnVzZXIuYWRtaW4iLCJhdXRoX3RpbWUiOjE1OTgzMDA2MzAsImlzcyI6Imh0dHBzOlwvXC9jb2duaXRvLWlkcC5jYS1jZW50cmFsLTEuYW1hem9uYXdzLmNvbVwvY2EtY2VudHJhbC0xX2xvbHdmWUlBciIsImV4cCI6MTU5ODYyODkzNiwiaWF0IjoxNTk4NjI1MzM2LCJqdGkiOiIyNjIwZjczZS0wNGE0LTQ4NjAtODEzOS1jZTA3YmIyMTdkNDIiLCJjbGllbnRfaWQiOiI1bjYzbmQ0NzNwdjduZTJxc2t2MzBna2NiaCIsInVzZXJuYW1lIjoicHVscGZyZWUifQ.dRha99CcTuCLOTNkguH95IbT9157INXqp-0hZvOypd7BB8yN-LOSQdOmVv4uE4L8r_66dXO_W-Tnua-N5kUwUgAYbtFZz4f_yDKaxu9VKr9A6jiisCkW_v7w0R3KKuSdazjYdBGf8GMjZgmlgVlDqNuHs0lQDYKv8hl3WuTIEz_N2eluGXoh-503lfoRFNs5BXtmFq1cydhfokREsoMvaaV09wqSJGTwZNtUcG1wdklaxP5mwi47Gqt9qoIvDak44UyimseFh_1jXRnkzNErrS3xhsopPsZDlEMy2lWD3x2G7pJ8E2uJ_mHpDh5KQRVQ2YXvYfIwDIwiWpKniKJyNg"
+	jwksURL         = "https://cognito-idp.ca-central-1.amazonaws.com/ca-central-1_lolwfYIAr/.well-known/jwks.json"
+) */
+
+func TestParse2(t *testing.T) {
+	// alg := jwa.RS256
+	key, err := rsa.GenerateKey(rand.Reader, 2048)
+	if err != nil {
+		t.Fatal("Failed to generate RSA key")
+	}
+
+	set, err := jwk.FetchHTTP(jwksURL)
+	if err != nil {
+		fmt.Printf("Error while fetching jwks: %v", err)
+	}
+	fmt.Printf("set: %T\n", set)
+
+	// token, err := jwt.ParseString(string(validToken), jwt.WithKeySet(set), jwt.WithVerify(jwa.RS512, &key.PublicKey))
+	token, err := jwt.ParseString(string(validToken), jwt.WithVerify(jwa.RS256, &key.PublicKey))
+	if err != nil {
+		fmt.Printf("Error while parsing token: %v", err)
+	}
+	fmt.Printf("token: %T\n", token)
+	// fmt.Printf("token: %+v\n", token)
+	// mp := token.PrivateClaims()
+	// fmt.Printf("map: %+v\n", mp)
+}
+
+func TestParse3(t *testing.T) {
+	/* var err error
+	// set, err := jwk.FetchHTTP(jwksURL)
+	// if err != nil {
+	// 	fmt.Printf("Error while fetching jwks: %v", err)
+	// }
+	// fmt.Printf("set: %+v\n", set.Keys[0])
+
+	_, err = jwtgo.Parse(validToken, func(token *jwtgo.Token) (interface{}, error) {
+
+		if err != nil {
+			fmt.Printf("Error while Parsing token: %v", err)
+		}
+		fmt.Printf("token: %+v\n", token.Header)
+
+		return nil, nil
+	}) */
+
+	// use set.Keys[0]
+	// keys := set.LookupKeyID("mykey")
+	// keys := set.Keys[0]
+	// fmt.Printf("keys: %+v\n", keys.KeyID())
+	// fmt.Printf("keys: %+v\n", keys)
+	/* if len(keys) == 0 {
+		log.Printf("failed to lookup key: %s", err)
+		return
+	} */
+
+	/* var key interface{}
+	if err := keys[0].Raw(&key); err != nil {
+		log.Printf("failed to generate public key: %s", err)
+		return
+	} */
+
+	// token, err := jwt.Parse(tokenString, jwk())
+
+	/* token, err := jwt.ParseString(string(validToken))
+	if err != nil {
+		fmt.Printf("Error while parsing token: %v", err)
+	}
+	fmt.Printf("token: %T\n", token)
+	fmt.Printf("token: %+v\n", token)
+	mp := token.PrivateClaims()
+	fmt.Printf("map: %+v\n", mp) */
+
+	// fmt.Printf("token: %+v\n", token.Get("Header"))
+
+	// if keyID, ok := token.Header["kid"].(string); ok {
+	// 	return keyID, nil
+	// }
+
+	/* if keyID, ok := token.Header["kid"].(string); ok {
+		return keyID, nil
+	} */
+	// fmt.Printf("token: %+v\n", token)
+
+	/* keyID, err := getKeyID(validToken)
+	if err != nil {
+		fmt.Printf("Error while fetching jwks: %v", err)
+	}
+	fmt.Printf(": %+v\n", ) */
+
+	/* keys := set.LookupKeyID("mykey")
+	if len(keys) == 0 {
+		log.Printf("failed to lookup key: %s", err)
+		return
+	}
+
+	var key interface{}
+	if err := keys[0].Raw(&key); err != nil {
+		log.Printf("failed to create public key: %s", err)
+		return
+	} */
+}
+
+/* func getKeyID(token *jwt.Token) (string, error) {
+	if keyID, ok := token.Header["kid"].(string); ok {
+		return keyID, nil
+	}
+	return "", fmt.Errorf("Token doesn't have header kid")
+} */

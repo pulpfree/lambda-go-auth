@@ -1,0 +1,26 @@
+# github.com/dgrijalva/jwt-go v3.2.0+incompatible
+## explicit
+github.com/dgrijalva/jwt-go
+# github.com/konsorten/go-windows-terminal-sequences v1.0.3
+github.com/konsorten/go-windows-terminal-sequences
+# github.com/lestrrat-go/iter v0.0.0-20200422075355-fc1769541911
+github.com/lestrrat-go/iter/arrayiter
+github.com/lestrrat-go/iter/mapiter
+# github.com/lestrrat-go/jwx v1.0.4
+## explicit
+github.com/lestrrat-go/jwx/internal/base64
+github.com/lestrrat-go/jwx/internal/iter
+github.com/lestrrat-go/jwx/internal/option
+github.com/lestrrat-go/jwx/internal/pool
+github.com/lestrrat-go/jwx/jwa
+github.com/lestrrat-go/jwx/jwk
+# github.com/pkg/errors v0.9.1
+github.com/pkg/errors
+# github.com/pulpfree/go-errors v0.1.0
+## explicit
+github.com/pulpfree/go-errors
+# github.com/sirupsen/logrus v1.6.0
+## explicit
+github.com/sirupsen/logrus
+# golang.org/x/sys v0.0.0-20190422165155-953cdadca894
+golang.org/x/sys/unix
