@@ -51,6 +51,9 @@ func Validate(tokenString, jwksURL string) (principalID string, err error) {
 	return principalID, err
 }
 
+// getKeySet function
+// NOTE: this does error if the token is very old because, I believe, the keyID isn't found in the jwk keys.
+// My understanding is that the jwk keys are renewed every 24 hrs, this would therefore make sense.
 func getKeySet(jwksURL string) (set *jwk.Set, err error) {
 	set, err = jwk.FetchHTTP(jwksURL)
 	if err != nil {

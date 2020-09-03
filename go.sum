@@ -16,6 +16,8 @@ github.com/pmezard/go-difflib v1.0.0 h1:4DBwDE0NGyQoBHbLQYPwSUPoCMWR5BEzIk/f1lZb
 github.com/pmezard/go-difflib v1.0.0/go.mod h1:iKH77koFhYxTK1pcRnkKkqfTogsbg7gZNVY4sRDYZ/4=
 github.com/pulpfree/go-errors v0.1.0 h1:B9T5hsMk3KT+tCckj1dtyGBBTJmvKYxR+bvDHcvKDyo=
 github.com/pulpfree/go-errors v0.1.0/go.mod h1:KgNDK5LHXFg96lYZCtJODeL8jxlZABz552JHmCx468s=
+github.com/pulpfree/go-errors v1.0.1 h1:OPn8/fU+TDMB4Zp2LJXZrQLaVjsnU9wby7RoNRF1Kxo=
+github.com/pulpfree/go-errors v1.0.1/go.mod h1:KgNDK5LHXFg96lYZCtJODeL8jxlZABz552JHmCx468s=
 github.com/sirupsen/logrus v1.6.0 h1:UBcNElsrwanuuMsnGSlYmtmgbb23qDR5dG+6X6Oo89I=
 github.com/sirupsen/logrus v1.6.0/go.mod h1:7uNnSEd1DgxDLC74fIahvMZmmYsHGZGEOFrfsX/uA88=
 github.com/stretchr/objx v0.1.0/go.mod h1:HFkY916IF+rwdDfMAkV7OtwuqBVzrE8GR6GFx+wExME=

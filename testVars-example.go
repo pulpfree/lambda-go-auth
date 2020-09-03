@@ -1,5 +1,7 @@
 package auth
 
+// add the following constants to enable full testing
+
 // const (
 // 	cognitoClientID = "" // cognito client id
 // 	jwksURL         = "https://cognito-idp.{region}.amazonaws.com/{userPoolId}/.well-known/jwks.json"
