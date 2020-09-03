@@ -11,11 +11,9 @@ import (
 	log "github.com/sirupsen/logrus"
 )
 
-// https://cognito-idp.{region}.amazonaws.com/{userPoolId}/.well-known/jwks.json
-
-var keySet *jwk.Set
-
 // Validate method
+// jwksURL consists of the following type of AWS cognito jwk url
+// https://cognito-idp.{region}.amazonaws.com/{userPoolId}/.well-known/jwks.json
 func Validate(tokenString, jwksURL string) (principalID string, err error) {
 
 	/**
@@ -62,6 +60,8 @@ func getKeySet(jwksURL string) (set *jwk.Set, err error) {
 }
 
 func getKey(token *jwt.Token, jwksURL string) (interface{}, error) {
+
+	var keySet *jwk.Set
 
 	keyID, ok := token.Header["kid"].(string)
 	if !ok {
